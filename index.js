@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectToDb from "./dbConnection/db.js";
+import signupRouter from "./routes/userRoute.js";
 
 // configure dotenv and express
 dotenv.config();
@@ -14,6 +15,14 @@ const port = process.env.PORT || 9000;
 app.get("/", (req, res) => {
   res.send("Hello world...");
 });
+
+// use middleware
+app.use(express.json())
+
+// routes
+
+// --> http://localhost:9000/user/signup
+app.use("/user", signupRouter)
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
