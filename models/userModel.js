@@ -21,10 +21,10 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Password is required."],
     },
-    // isAdmin: {
-    //     type: Boolean,
-    //     default: "user"
-    // }
+    role: {
+      type: String,
+      default: "user"
+    }
   },
   { timestamps: true }
 );

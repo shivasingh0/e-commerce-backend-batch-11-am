@@ -38,6 +38,7 @@ export const signup = async (req, res) => {
       id: user._id,
       name: user.name,
       number: user.number,
+      role: user.role,
       token
     });
   } catch (error) {
@@ -77,6 +78,7 @@ export const login = async (req, res) => {
       name: user.name,
       number: user.number,
       email: user.email,
+      role: user.role,
       token
     })
     
