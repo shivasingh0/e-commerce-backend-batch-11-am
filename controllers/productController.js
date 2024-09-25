@@ -31,15 +31,54 @@ export const displayProduct = async (req, res) => {
 
 // single product controller
 export const singleProduct = async (req, res) => {
-  console.log(`req`, req);
+  // console.log(`req`, req);
   console.log(`req.params.id`, req.params.id);
   try {
-    const result = await Product.findOne({_id: req.params.id})
+    const result = await Product.findOne({ _id: req.params.id });
+    // const result = await Product.findOne({_id: req.query.id})
 
     if (result) {
-      res.status(200).json(result)
+      res.status(200).json(result);
     } else {
       res.status(404).json({ msg: "No products found" });
+    }
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).json({ msg: error.message });
+  }
+};
+
+// update product controller
+export const updateProduct = async (req, res) => {
+  try {
+    const result = await Product.updateOne(
+      { _id: req.params.id },
+      {
+        $set: req.body,
+      }
+    );
+
+    if (result) {
+      res.status(202).send(result);
+    } else {
+      return res.status(404).json({ msg: "No products found" });
+    }
+
+  } catch (error) {
+    console.error(error.message);
+    res.status(400).json({ msg: error.message });
+  }
+};
+
+// delete product controller
+export const deleteProduct = async (req, res) => {
+  try {
+    const result = await Product.deleteOne({_id: req.params.id})
+
+    if (result) {
+      res.status(200).send(result)
+    } else {
+      return res.status(404).json({ msg: "No products found" });
     }
 
   } catch (error) {
