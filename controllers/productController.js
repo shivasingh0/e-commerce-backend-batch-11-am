@@ -3,9 +3,16 @@ import Product from "../models/productsModel.js";
 // add product controller
 export const addProduct = async (req, res) => {
   try {
-    const newProduct = new Product(req.body);
 
-    const result = await newProduct.save();
+    if (req.file) {
+      req.body.image = req.file.filename;
+    }
+
+      const product = new Product(req.body);
+
+    // const newProduct = new Product(req.body);
+
+    const result = await product.save();
 
     res.status(201).json(result);
   } catch (error) {
@@ -63,7 +70,6 @@ export const updateProduct = async (req, res) => {
     } else {
       return res.status(404).json({ msg: "No products found" });
     }
-
   } catch (error) {
     console.error(error.message);
     res.status(400).json({ msg: error.message });
@@ -73,16 +79,15 @@ export const updateProduct = async (req, res) => {
 // delete product controller
 export const deleteProduct = async (req, res) => {
   try {
-    const result = await Product.deleteOne({_id: req.params.id})
+    const result = await Product.deleteOne({ _id: req.params.id });
 
     if (result) {
-      res.status(200).send(result)
+      res.status(200).send(result);
     } else {
       return res.status(404).json({ msg: "No products found" });
     }
-
   } catch (error) {
     console.error(error.message);
     res.status(400).json({ msg: error.message });
   }
-}
+};

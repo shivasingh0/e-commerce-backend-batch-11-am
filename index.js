@@ -21,7 +21,6 @@ app.get("/", (req, res) => {
 app.use(express.json())
 
 // routes
-
 // --> http://localhost:9000/user/signup
 app.use("/user", signupRouter)
 app.use("/product", productRouter)
