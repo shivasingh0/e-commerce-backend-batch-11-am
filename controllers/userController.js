@@ -3,6 +3,7 @@ import { generateToken } from "../config/generateToken.js";
 import { sendmail } from "../config/mailer.js";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
+import axios from "axios"
 
 // signup
 export const signup = async (req, res) => {
@@ -65,6 +66,16 @@ export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
 
+    // const result = await fetch("https://jsonplaceholder.typicode.com/todos",{
+    //   method: "GET",
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     },
+    // })
+
+    const result = await axios.get("https://jsonplaceholder.typicode.com/todos")
+    console.log(result);
+    
     // check data fields
     if (!email || !password) {
       return res.status(400).json({ msg: "please fill all the fields." })
@@ -93,7 +104,8 @@ export const login = async (req, res) => {
       number: user.number,
       email: user.email,
       role: user.role,
-      token
+      token,
+      result: result.data
     })
 
   } catch (error) {
