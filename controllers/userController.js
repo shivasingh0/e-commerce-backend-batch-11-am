@@ -1,5 +1,6 @@
 // user controller
 import { generateToken } from "../config/generateToken.js";
+import { sendmail } from "../config/mailer.js";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 
@@ -10,7 +11,7 @@ export const signup = async (req, res) => {
   try {
 
     if (!email || !password || !name || !number) {
-      return res.status(400).json({msg: "please fill all the fields."})
+      return res.status(400).json({ msg: "please fill all the fields." })
     }
 
     // check user
@@ -34,6 +35,19 @@ export const signup = async (req, res) => {
     const token = generateToken(user._id)
 
     await user.save();
+
+    sendmail(
+      user.email,
+      "Welcome to our website",
+      {
+        username: user.name,
+        email: user.email,
+        password: user.password
+      }
+    ).catch(err => {
+      console.log(err)
+    })
+
     res.status(201).json({
       id: user._id,
       name: user.name,
@@ -48,27 +62,27 @@ export const signup = async (req, res) => {
 
 // login
 export const login = async (req, res) => {
-  const {email, password} = req.body;
+  const { email, password } = req.body;
   try {
 
     // check data fields
     if (!email || !password) {
-      return res.status(400).json({msg: "please fill all the fields."})
+      return res.status(400).json({ msg: "please fill all the fields." })
     }
 
     // find user in DB
-    const user = await User.findOne({email})
+    const user = await User.findOne({ email })
 
     if (!user) {
-      return res.status(401).json({msg: "User not found."})
+      return res.status(401).json({ msg: "User not found." })
     }
 
     const decodePassword = await bcrypt.compare(password, user.password)
     console.log("decodePassword", decodePassword);
-    
+
     // check password
     if (!decodePassword) {
-      return res.status(401).json({msg: "Invalid password"})
+      return res.status(401).json({ msg: "Invalid password" })
     }
 
     const token = generateToken(user._id)
@@ -81,9 +95,9 @@ export const login = async (req, res) => {
       role: user.role,
       token
     })
-    
+
   } catch (error) {
     console.error(error.message);
-    
+
   }
 };
